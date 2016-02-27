@@ -2,10 +2,15 @@ module.exports = function(grunt) {
   require('jit-grunt')(grunt);
 
   grunt.initConfig({
+    clean: ["assets/compiled"],
     concat: {
       js: {
         src: 'assets/src/js/*.js',
         dest: 'assets/compiled/js/script.js'
+      },
+      less : {
+        src: 'assets/src/css/*.less',
+        dest: 'assets/compiled/css/main.less'
       }
     },
     less: {
@@ -15,21 +20,20 @@ module.exports = function(grunt) {
           yuicompress: true,
           optimization: 2
         },
-        files: [
-          {
-            expand: true,
-            cwd: 'src',
-            src: ['assets/src/css/*.less'],
-            dest: 'assets/compiled/css/main.css',
-            ext: '.css'
-          }
-        ],
+         files: {
+          'assets/compiled/css/main.css': 'assets/compiled/css/main.less'
+        },
       }
     },
     watch: {
+      scripts: {
+        files: ['assets/src/js/*.js'],
+        tasks: ['clean','concat'],
+        // tasks: ['copy']
+      }, //scrip
       styles: {
         files: ['assets/src/css/*.less'], // which files to watch
-        tasks: ['less'],
+        tasks: ['clean', 'concat', 'less'],
         options: {
           nospawn: false
         }
@@ -37,5 +41,5 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask('default', ['concat','less', 'watch']);
+  grunt.registerTask('default', ['clean','concat','less', 'watch']);
 };
