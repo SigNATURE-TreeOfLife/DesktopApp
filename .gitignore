@@ -4,8 +4,7 @@ node_modules
 
 # CSS generated files #
 ######################
-css
-*.css
+/assets/compiled
 
 # OS generated files #
 ######################
