@@ -1,5 +1,4 @@
 'use strict';
-const $ = require('jQuery');
 const superagent = require('superagent');
 
 (function(){

@@ -52,12 +52,3 @@ for(var i = 0; i < 100; i++){
     data.push(kingdom);       
 }
 fillLeftList(data);
-
-'use strict';
-const superagent = require('superagent');
-
-(function(){
-    console.log($);
-    console.log(superagent);
-    console.log("jquery and superagent is loaded!");
-})();
