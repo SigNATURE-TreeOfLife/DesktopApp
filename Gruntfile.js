@@ -28,12 +28,12 @@ module.exports = function(grunt) {
     watch: {
       scripts: {
         files: ['assets/src/js/*.js'],
-        tasks: ['clean','concat'],
+        tasks: ['concat'],
         // tasks: ['copy']
       }, //scrip
       styles: {
         files: ['assets/src/css/*.less'], // which files to watch
-        tasks: ['clean', 'concat', 'less'],
+        tasks: ['concat', 'less'],
         options: {
           nospawn: false
         }
