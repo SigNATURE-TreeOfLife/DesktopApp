@@ -2,15 +2,58 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="assets/compiled/css/main.css">
-    <link rel="stylesheet" type="text/css" href="node_modules/bootstrap/dist/css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="assets/compiled/css/main.css">
+        <link rel="stylesheet" type="text/css" href="node_modules/bootstrap/dist/css/bootstrap.css">
+
     <title>Hello World!</title>
   </head>
   <body>
-    <h1>Hello World!</h1>
-    We are using node <script>document.write(process.versions.node)</script>,
-    Chrome <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
+
+    <ul class="navbar">
+            <li class="navbar-element" style="width: 10%; height:70px">
+                    <img src="assets/img/logo.png">
+            </li>
+         <li class = "navbar-element" style="width: 60%">
+                <a href="#" title="Header" data-toggle="popover" data-trigger="hover" data-content="Some content">
+                   <div class="breadcrumb-element">      
+                     <div id="Kingdom-category" style="height:15px">category</div>
+                     <div id="Kingdom-name" style="height:20px">name</div>
+                   </div>
+                   
+                   <div class="breadcrumb-element">
+                     <div id="arrow" style="height:15px"></div>
+                     <div id="arrow" style="height:20px">></div>
+                   </div>
+
+                   <div class="breadcrumb-element">
+                     <div id="Phylum-category" style="height:15px">category</div>
+                     <div id="Phylum-name" style="height:20px">name</div>
+                   </div>
+                </a>
+         </li>
+
+        <li  class="navbar-element" style="width: 30%; height:70px; display: inline; overflow:visible;">
+                <div id="popsearch" class="dropdown">
+                <button id="ugly" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+    <span class="caret"></span></button>
+    <ul class="dropdown-menu" style="container:'body'">
+      <li><a href="#" >Search All</a></li>
+      <li><a href="#" >Search Parent</a></li>
+      <li><a href="#">Search Child</a></li>
+    </ul>
+                </div>
+    <!-- <a id="popsearch" href="#" data-toggle="popover" title="Popover Header" data-container="body" data-placement="bottom"  data-trigger="focus"> </a> -->
+
+                <div class="search" style=" padding-right: .5em;">
+                <input type="text" style="border: none;width: 100%; background-color:#b4b4b4; outline:none;" />
+                </div>
+        </li>
+
+    </ul>
+    <div></div>
+
   </body>
-  <script src="assets/compiled/js/script.js"></script>
+        <script src="node_modules/jquery/dist/jquery.js"></script>
+        <script src="assets/compiled/js/script.js"></script>
+
 </html>
