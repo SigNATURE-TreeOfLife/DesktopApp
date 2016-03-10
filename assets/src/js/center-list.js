@@ -50,6 +50,22 @@ function addItemToList(dp, $center_list, listSize){
     $center_list.append($cli_table_row);
 
 }
+function createTopBottomFade($center_list, $container, listSize){
+    if(listSize> 8){
+        var $fade_top = $("<div>", {class:"fade-top"});
+        $fade_top.width( $("#container-1").width());
+        $fade_top.offset($center_list.position());
+        $center_list.append($fade_top);
+        var $fade_bottom= $("<div>", {class:"fade-bottom"});
+        $fade_bottom.width( $("#container-1").width());
+        var $offset_pos = $center_list.position();
+        $offset_pos.top = $offset_pos.top + $("#container-1").height()- 80;
+        $fade_bottom.offset($offset_pos);
+        $center_list.append($fade_bottom);
+    }
+    
+}
+
 // Wrapper function to fill in the left list
 function fillLeftList(data) {
     var $center_list = $("#center-list");
@@ -62,8 +78,10 @@ function fillLeftList(data) {
 
         addItemToList(dp, $center_list, data.length);
     }
+    createTopBottomFade($center_list, $("#container-1"), data.length); 
     $center_list.width($(document).width()*.4);
 }
+
 // Wrapper function to fill in the right list
 function fillRightList(data) {
     var $center_list = $("#center-list-2");
@@ -78,6 +96,7 @@ function fillRightList(data) {
         addItemToList(dp, $center_list, data.length);
         console.log(data.length);
     }
+    createTopBottomFade($center_list, $("#container-2"), data.length);
     $center_list.width($(document).width()*.4);
 }
 // Class to hold data of name time and description
@@ -99,5 +118,26 @@ for(var i = 0; i < 7; i++){
     var domain = new dataObj("Domain Name", "Time Period", "Description");
     data2.push(domain);
 }
-fillLeftList(data);
-fillRightList(data2);
+
+//Function will empty the entire list 
+// Will also put animations before clearing the list
+function clearList($center_list){
+    $center_list.empty();    
+}
+function animateDisappear($center_list){
+    $center_list.find("tbody").animate({"left":"-1000px"}, "slow");
+}
+// Function sets what will happen when you click a value on the given table id
+function setClicks(tableId){
+    tableId.find("tr").click(function(){
+        var ul = $(this).find("td:nth-child(2)");
+        animateDisappear(tableId);
+    });
+}
+function fillContent(data1, data2){
+    fillLeftList(data);
+    fillRightList(data2);
+    setClicks($("#center-list"));
+    setClicks($("#center-list-2"));
+}
+fillContent(data, data2);

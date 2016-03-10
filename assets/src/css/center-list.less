@@ -1,6 +1,7 @@
 /************************************************************************
 CSS FOR LIST
 ************************************************************************/
+
 /************************************************************************
 CONTAINERS
 ************************************************************************/
@@ -15,6 +16,18 @@ CONTAINERS
     margin: 5%;
     width:40%;
     overflow:auto;
+}
+.fade-top {
+    position:absolute;
+    height:80px;
+    width:100%;
+    background: -webkit-gradient(linear, left bottom, left top, color-stop(1, rgba(255,255,255,1.0)), color-stop(0, rgba(255,255,255,0.0)));
+}
+.fade-bottom{
+    position:absolute;
+    height:80px;
+    width:100%;
+    background: -webkit-gradient(linear, left bottom, left top, color-stop(1, rgba(255,255,255,0.0)), color-stop(0, rgba(255,255,255,1.0)));
 }
 /************************************************************************
 LEFT CENTER LIST CSS
@@ -33,6 +46,11 @@ ITEM LIST
 .center-list-item{
     font-family: 'Source Sans Pro', sans-serif;
     font-weight:400;
+    opacity:0.4;
+    transition: .3s;
+}
+.center-list-item:hover {
+    opacity:1;
 }
 .center-list-list {
     vertical-align:middle;
@@ -51,6 +69,7 @@ ITEM LIST
     font-size: 18px;
     font-weight:300;
 }
+
 /************************************************************************
 SHAPING
 ************************************************************************/
