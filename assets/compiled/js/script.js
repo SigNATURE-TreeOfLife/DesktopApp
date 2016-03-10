@@ -1,6 +1,6 @@
 const $ = require('jQuery');
 
-// Adds each individual item on the list 
+// Adds each individual item on the list
 // Includes:
 //  image
 //  name
@@ -28,10 +28,10 @@ function addItemToList(dp, $center_list, listSize){
 
     var $cli_name = $("<li>", {class : "item-name"});
     $cli_name.append(dp.name);
-    
+
     var $cli_time = $("<li>", {class : "item-time"});
     $cli_time.append(dp.time);
-    
+
     var $cli_more = $("<li>", {class: "item-time"});
     $cli_more.append("More...");
 
@@ -63,7 +63,7 @@ function createTopBottomFade($center_list, $container, listSize){
         $fade_bottom.offset($offset_pos);
         $center_list.append($fade_bottom);
     }
-    
+
 }
 
 // Wrapper function to fill in the left list
@@ -78,7 +78,7 @@ function fillLeftList(data) {
 
         addItemToList(dp, $center_list, data.length);
     }
-    createTopBottomFade($center_list, $("#container-1"), data.length); 
+    createTopBottomFade($center_list, $("#container-1"), data.length);
     $center_list.width($(document).width()*.4);
 }
 
@@ -110,7 +110,7 @@ function dataObj (_name, _time, _description) {
 var data = [];
 for(var i = 0; i < 100; i++){
     var kingdom = new dataObj("Kingdom Name ", "Time Period", "Description");
-    data.push(kingdom);       
+    data.push(kingdom);
 }
 // Data to fill in for the right list
 var data2 = [];
@@ -119,10 +119,10 @@ for(var i = 0; i < 7; i++){
     data2.push(domain);
 }
 
-//Function will empty the entire list 
+//Function will empty the entire list
 // Will also put animations before clearing the list
 function clearList($center_list){
-    $center_list.empty();    
+    $center_list.empty();
 }
 function animateDisappear($center_list){
     $center_list.find("tbody").animate({"left":"-1000px"}, "slow");
@@ -143,10 +143,9 @@ function fillContent(data1, data2){
 fillContent(data, data2);
 
 global.jQuery = require('jQuery');
-const $ = require('jQuery');
 const bootstrap=require('bootstrap');
 $(document).ready(function(){
-    $('[data-toggle="popover"]').popover();   
+    $('[data-toggle="popover"]').popover();
 });
 
 'use strict';
