@@ -27,7 +27,10 @@ function addItemToList(dp, $center_list, listSize){
 
     var $cli_name = $("<li>", {class : "item-name"});
     $cli_name.append(dp.name);
-    
+
+    var $cli_id = $("<li>",{class:"hidden"});
+    $cli_id.append(dp.id); 
+
     var $cli_time = $("<li>", {class : "item-time"});
     $cli_time.append(dp.time);
     
@@ -36,13 +39,13 @@ function addItemToList(dp, $center_list, listSize){
 
     if(listSize < 8){
         $cli_name.css("font-size", 20 + $cli_table_row.height() / 30);
-        console.log(20 + $cli_table_row.height()/30);
         $cli_time.css("font-size", 18 + $cli_table_row.height()/30);
         $cli_more.css("font-size", 18 + $cli_table_row.height()/30);
 
     }
 
     $cli_div_list.append($cli_name);
+    $cli_div_list.append($cli_id);
     $cli_div_list.append($cli_time);
     $cli_div_list.append($cli_more);
 
@@ -66,7 +69,7 @@ function createTopBottomFade($center_list, $container, listSize){
         var $fade_bottom= $("<div>", {class:"fade-bottom"});
         $fade_bottom.width( $("#container-1").width());
         var $offset_pos = $center_list.position();
-        $offset_pos.top = $offset_pos.top + $("#container-1").height()- 80;
+        $offset_pos.top = $offset_pos.top + $("#container-1").height()- 50;
         $fade_bottom.offset($offset_pos);
         $center_list.append($fade_bottom);
     }
@@ -87,7 +90,7 @@ function fillLeftList(data) {
         addItemToList(dp, $center_list, data.length);
     }
     createTopBottomFade($center_list, $("#container-1"), data.length); 
-    $center_list.width($(document).width()*.4);
+    $center_list.width($(document).width() * .4);
 }
 
 // Wrapper function to fill in the right list
@@ -105,25 +108,26 @@ function fillRightList(data) {
         console.log(data.length);
     }
     createTopBottomFade($center_list, $("#container-2"), data.length);
-    $center_list.width($(document).width()*.45);
+    $center_list.width($(document).width()*.4);
 }
 // Class to hold data of name time and description
 // Can add more variables later when needed
-function dataObj (_name, _time, _description) {
+function dataObj (_name, _time, _description, _id) {
     this.name = _name;
     this.time = _time;
     this.description = _description;
+    this.id = _id;
 }
 // Data to fill in for the left list
 var data = [];
 for(var i = 0; i < 3; i++){
-    var kingdom = new dataObj("Kingdom Name ", "Time Period", "Description");
+    var kingdom = new dataObj("Kingdom Name ", "Time Period", "Description", i);
     data.push(kingdom);       
 }
 // Data to fill in for the right list
 var data2 = [];
-for(var i = 0; i < 3; i++){
-    var domain = new dataObj("Domain Name", "Time Period", "Description");
+for(var i = 0; i < 9; i++){
+    var domain = new dataObj("Domain Name", "Time Period", "Description", i);
     data2.push(domain);
 }
 
@@ -132,14 +136,14 @@ for(var i = 0; i < 3; i++){
 function clearList($center_list){
     $center_list.empty();    
 }
-function animateDisappear($center_list){
-    $center_list.find("tbody").animate({"left":"-1000px"}, "slow");
+function getChildren(id) {
+
 }
 // Function sets what will happen when you click a value on the given table id
 function setClicks(tableId){
     tableId.find("tr").click(function(){
         var ul = $(this).find("td:nth-child(2)");
-        animateDisappear(tableId);
+        
     });
 }
 function fillContent(data1, data2){
