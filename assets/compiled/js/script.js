@@ -1,6 +1,5 @@
 const $ = require('jQuery');
-
-// Adds each individual item on the list
+// Adds each individual item on the list 
 // Includes:
 //  image
 //  name
@@ -28,12 +27,20 @@ function addItemToList(dp, $center_list, listSize){
 
     var $cli_name = $("<li>", {class : "item-name"});
     $cli_name.append(dp.name);
-
+    
     var $cli_time = $("<li>", {class : "item-time"});
     $cli_time.append(dp.time);
-
+    
     var $cli_more = $("<li>", {class: "item-time"});
     $cli_more.append("More...");
+
+    if(listSize < 8){
+        $cli_name.css("font-size", 20 + $cli_table_row.height() / 30);
+        console.log(20 + $cli_table_row.height()/30);
+        $cli_time.css("font-size", 18 + $cli_table_row.height()/30);
+        $cli_more.css("font-size", 18 + $cli_table_row.height()/30);
+
+    }
 
     $cli_div_list.append($cli_name);
     $cli_div_list.append($cli_time);
@@ -63,7 +70,7 @@ function createTopBottomFade($center_list, $container, listSize){
         $fade_bottom.offset($offset_pos);
         $center_list.append($fade_bottom);
     }
-
+    
 }
 
 // Wrapper function to fill in the left list
@@ -72,13 +79,14 @@ function fillLeftList(data) {
     var $footer = 20;
     var $header = 100;
     $("#container-1").height((window).screen.height- $footer-$header);
+    $center_list.height($("#container-1").height());
 
     for (var obj in data){
         var dp = data[obj];
 
         addItemToList(dp, $center_list, data.length);
     }
-    createTopBottomFade($center_list, $("#container-1"), data.length);
+    createTopBottomFade($center_list, $("#container-1"), data.length); 
     $center_list.width($(document).width()*.4);
 }
 
@@ -97,7 +105,7 @@ function fillRightList(data) {
         console.log(data.length);
     }
     createTopBottomFade($center_list, $("#container-2"), data.length);
-    $center_list.width($(document).width()*.4);
+    $center_list.width($(document).width()*.45);
 }
 // Class to hold data of name time and description
 // Can add more variables later when needed
@@ -108,21 +116,21 @@ function dataObj (_name, _time, _description) {
 }
 // Data to fill in for the left list
 var data = [];
-for(var i = 0; i < 100; i++){
+for(var i = 0; i < 3; i++){
     var kingdom = new dataObj("Kingdom Name ", "Time Period", "Description");
-    data.push(kingdom);
+    data.push(kingdom);       
 }
 // Data to fill in for the right list
 var data2 = [];
-for(var i = 0; i < 7; i++){
+for(var i = 0; i < 3; i++){
     var domain = new dataObj("Domain Name", "Time Period", "Description");
     data2.push(domain);
 }
 
-//Function will empty the entire list
+//Function will empty the entire list 
 // Will also put animations before clearing the list
 function clearList($center_list){
-    $center_list.empty();
+    $center_list.empty();    
 }
 function animateDisappear($center_list){
     $center_list.find("tbody").animate({"left":"-1000px"}, "slow");
@@ -145,7 +153,7 @@ fillContent(data, data2);
 global.jQuery = require('jQuery');
 const bootstrap=require('bootstrap');
 $(document).ready(function(){
-    $('[data-toggle="popover"]').popover();
+    $('[data-toggle="popover"]').popover();   
 });
 
 'use strict';

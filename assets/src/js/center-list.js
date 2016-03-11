@@ -1,5 +1,4 @@
 const $ = require('jQuery');
-
 // Adds each individual item on the list 
 // Includes:
 //  image
@@ -34,6 +33,14 @@ function addItemToList(dp, $center_list, listSize){
     
     var $cli_more = $("<li>", {class: "item-time"});
     $cli_more.append("More...");
+
+    if(listSize < 8){
+        $cli_name.css("font-size", 20 + $cli_table_row.height() / 30);
+        console.log(20 + $cli_table_row.height()/30);
+        $cli_time.css("font-size", 18 + $cli_table_row.height()/30);
+        $cli_more.css("font-size", 18 + $cli_table_row.height()/30);
+
+    }
 
     $cli_div_list.append($cli_name);
     $cli_div_list.append($cli_time);
@@ -72,6 +79,7 @@ function fillLeftList(data) {
     var $footer = 20;
     var $header = 100;
     $("#container-1").height((window).screen.height- $footer-$header);
+    $center_list.height($("#container-1").height());
 
     for (var obj in data){
         var dp = data[obj];
@@ -97,7 +105,7 @@ function fillRightList(data) {
         console.log(data.length);
     }
     createTopBottomFade($center_list, $("#container-2"), data.length);
-    $center_list.width($(document).width()*.4);
+    $center_list.width($(document).width()*.45);
 }
 // Class to hold data of name time and description
 // Can add more variables later when needed
@@ -108,13 +116,13 @@ function dataObj (_name, _time, _description) {
 }
 // Data to fill in for the left list
 var data = [];
-for(var i = 0; i < 100; i++){
+for(var i = 0; i < 3; i++){
     var kingdom = new dataObj("Kingdom Name ", "Time Period", "Description");
     data.push(kingdom);       
 }
 // Data to fill in for the right list
 var data2 = [];
-for(var i = 0; i < 7; i++){
+for(var i = 0; i < 3; i++){
     var domain = new dataObj("Domain Name", "Time Period", "Description");
     data2.push(domain);
 }
