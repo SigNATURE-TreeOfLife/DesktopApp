@@ -20,6 +20,7 @@ function addItemToList(dp, $center_list, listSize){
 
     // Creating the table data to append the image to in order to put in the table
     var $cli_image_td = $("<td>", {class: "table-child"});
+    $cli_image_td.width($cli_table_row.height());
     $cli_image_td.append($cli_image);
 
     // Adding the list data for labeling images
@@ -63,13 +64,13 @@ function addItemToList(dp, $center_list, listSize){
 function createTopBottomFade($center_list, $container, listSize){
     if(listSize> 8){
         var $fade_top = $("<div>", {class:"fade-top"});
-        $fade_top.width( $("#container-1").width());
-        $fade_top.offset($center_list.position());
+        $fade_top.width( $container.width());
+        $fade_top.offset($container.position());
         $center_list.append($fade_top);
         var $fade_bottom= $("<div>", {class:"fade-bottom"});
-        $fade_bottom.width( $("#container-1").width());
-        var $offset_pos = $center_list.position();
-        $offset_pos.top = $offset_pos.top + $("#container-1").height()- 50;
+        $fade_bottom.width( $container.width());
+        var $offset_pos = $container.position();
+        $offset_pos.top = $offset_pos.top + $container.height()- 50;
         $fade_bottom.offset($offset_pos);
         $center_list.append($fade_bottom);
     }
@@ -120,7 +121,7 @@ function dataObj (_name, _time, _description, _id) {
 }
 // Data to fill in for the left list
 var data = [];
-for(var i = 0; i < 3; i++){
+for(var i = 0; i < 9; i++){
     var kingdom = new dataObj("Kingdom Name ", "Time Period", "Description", i);
     data.push(kingdom);       
 }
@@ -136,20 +137,51 @@ for(var i = 0; i < 9; i++){
 function clearList($center_list){
     $center_list.empty();    
 }
+// TODO: Fill in this method for querying the database
 function getChildren(id) {
+    var data2 = [];
+    for(var i = 0; i < 9; i++){
+        var domain = new dataObj("Domain Name", "Time Period", "Description", i);
+        data2.push(domain);
+    }
+    return data2;
+}
 
+
+function setClicksLeft(){
+    $("#center-list-1").find("tr").click(function(){
+        var ul = $(this).find("td:nth-child(2)");
+// Fill data function that uses getChildren to fill in the data on the left list or the right list
+        var children = getChildren(parseInt(ul.find(".hidden").text()));
+        clearList($("#center-list-2"));
+        fillRightList(children);
+        setClicksRight();
+    });
 }
 // Function sets what will happen when you click a value on the given table id
-function setClicks(tableId){
-    tableId.find("tr").click(function(){
+function setClicksRight(){
+    $("#center-list-2").find("tr").click(function(){
         var ul = $(this).find("td:nth-child(2)");
-        
+// Fill data function that uses getChildren to fill in the data on the left list or the right list
+        var children = getChildren(parseInt(ul.find(".hidden").text()));
+        console.log(ul.find(".hidden").text());
+        clearList($("#center-list"));
+
+        $("#center-list").append($("#center-list-2").children());
+        $("#center-list").find(".fade-top").remove();
+        $("#center-list").find(".fade-bottom").remove();
+        createTopBottomFade($("#center-list"), $("#container-1"), 10);
+        clearList($("#center-list-2"));
+        fillRightList(children);
+
+        setClicksLeft();
+        setClicksRight();
     });
 }
 function fillContent(data1, data2){
     fillLeftList(data);
     fillRightList(data2);
-    setClicks($("#center-list"));
-    setClicks($("#center-list-2"));
+    setClicksLeft();
+    setClicksRight();
 }
 fillContent(data, data2);
