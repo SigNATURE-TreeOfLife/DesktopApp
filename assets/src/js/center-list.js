@@ -11,11 +11,11 @@ function addItemToList(dp, $center_list, listSize){
     if (listSize < 3) {
         $cli_table_row.height($center_list.height()/3);
     }
-    else if(listSize < 6){
+    else if(listSize < 7){
         $cli_table_row.height($center_list.height()/listSize);
     }
     else {
-        $cli_table_row.height($center_list.height()/6);
+        $cli_table_row.height($center_list.height()/7);
     }
 
     // Creating the image div with its height and width
