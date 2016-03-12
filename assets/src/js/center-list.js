@@ -8,10 +8,14 @@ const $ = require('jQuery');
 function addItemToList(dp, $center_list, listSize){
     // Creates a variable for the row
     var $cli_table_row = $("<tr>", {class:"center-list-item"});
-    if (listSize < 8) {
+    if (listSize < 3) {
+        $cli_table_row.height($center_list.height()/3);
+    }
+    else if(listSize < 6){
         $cli_table_row.height($center_list.height()/listSize);
-    }else {
-        $cli_table_row.height(85);
+    }
+    else {
+        $cli_table_row.height($center_list.height()/6);
     }
 
     // Creating the image div with its height and width
