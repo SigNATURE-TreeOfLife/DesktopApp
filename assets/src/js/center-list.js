@@ -1,5 +1,6 @@
 const $ = require('jQuery');
-// Adds each individual item on the list 
+
+// Adds each individual item on the list
 // Includes:
 //  image
 //  name
@@ -30,11 +31,11 @@ function addItemToList(dp, $center_list, listSize){
     $cli_name.append(dp.name);
 
     var $cli_id = $("<li>",{class:"hidden"});
-    $cli_id.append(dp.id); 
+    $cli_id.append(dp.id);
 
     var $cli_time = $("<li>", {class : "item-time"});
     $cli_time.append(dp.time);
-    
+
     var $cli_more = $("<li>", {class: "item-time"});
     $cli_more.append("More...");
 
@@ -74,12 +75,12 @@ function createTopBottomFade($center_list, $container, listSize){
         $fade_bottom.offset($offset_pos);
         $center_list.append($fade_bottom);
     }
-    
+
 }
 
 // Wrapper function to fill in the left list
 function fillLeftList(data) {
-    var $center_list = $("#center-list");
+    var $center_list = $("#left-list");
     var $footer = 20;
     var $header = 100;
     $("#container-1").height((window).screen.height- $footer-$header);
@@ -90,13 +91,13 @@ function fillLeftList(data) {
 
         addItemToList(dp, $center_list, data.length);
     }
-    createTopBottomFade($center_list, $("#container-1"), data.length); 
+    createTopBottomFade($center_list, $("#container-1"), data.length);
     $center_list.width($(document).width() * .4);
 }
 
 // Wrapper function to fill in the right list
 function fillRightList(data) {
-    var $center_list = $("#center-list-2");
+    var $center_list = $("#right-list");
     var $footer = 20;
     var $header = 100;
     $("#container-2").height((window).screen.height- $footer-$header);
@@ -111,20 +112,17 @@ function fillRightList(data) {
     createTopBottomFade($center_list, $("#container-2"), data.length);
     $center_list.width($(document).width()*.4);
 }
-// Class to hold data of name time and description
-// Can add more variables later when needed
-function dataObj (_name, _time, _description, _id) {
-    this.name = _name;
-    this.time = _time;
-    this.description = _description;
-    this.id = _id;
-}
+
 // Data to fill in for the left list
-var data = [];
-for(var i = 0; i < 9; i++){
-    var kingdom = new dataObj("Kingdom Name ", "Time Period", "Description", i);
-    data.push(kingdom);       
-}
+var data = [
+    {name: "Bacteria",  time: "", description: "", id: 50},
+    {name: "Protozoa",  time: "", description: "", id: 630577},
+    {name: "Plantae",   time: "", description: "", id: 202422},
+    {name: "Animalia",  time: "", description: "", id: 202423},
+    {name: "Fungi",     time: "", description: "", id: 555705},
+    {name: "Chromista", time: "", description: "", id: 630578},
+    {name: "Archaea",   time: "", description: "", id: 935939},
+];
 // Data to fill in for the right list
 var data2 = [];
 for(var i = 0; i < 9; i++){
@@ -132,50 +130,48 @@ for(var i = 0; i < 9; i++){
     data2.push(domain);
 }
 
-//Function will empty the entire list 
+//Function will empty the entire list
 // Will also put animations before clearing the list
 function clearList($center_list){
-    $center_list.empty();    
-}
-// TODO: Fill in this method for querying the database
-function getChildren(id) {
-    var data2 = [];
-    for(var i = 0; i < 9; i++){
-        var domain = new dataObj("Domain Name", "Time Period", "Description", i);
-        data2.push(domain);
-    }
-    return data2;
+    $center_list.empty();
 }
 
+function killClicksLeft(){
+  $("#left-list").find("tr").unbind("click");
+}
 
 function setClicksLeft(){
-    $("#center-list-1").find("tr").click(function(){
+    $("#left-list").find("tr").click(function(){
         var ul = $(this).find("td:nth-child(2)");
 // Fill data function that uses getChildren to fill in the data on the left list or the right list
-        var children = getChildren(parseInt(ul.find(".hidden").text()));
-        clearList($("#center-list-2"));
-        fillRightList(children);
-        setClicksRight();
+        getChildren(parseInt(ul.find(".hidden").text()), function(children){
+          clearList($("#right-list"));
+          fillRightList(children);
+          setClicksRight();
+        });
     });
 }
 // Function sets what will happen when you click a value on the given table id
 function setClicksRight(){
-    $("#center-list-2").find("tr").click(function(){
+    $("#right-list").find("tr").click(function(){
         var ul = $(this).find("td:nth-child(2)");
 // Fill data function that uses getChildren to fill in the data on the left list or the right list
-        var children = getChildren(parseInt(ul.find(".hidden").text()));
-        console.log(ul.find(".hidden").text());
-        clearList($("#center-list"));
+        getChildren(parseInt(ul.find(".hidden").text()), function(children){
+          if (children.length == 0) return;
+          clearList($("#left-list"));
+          $("#left-list").append($("#right-list").children());
+          killClicksLeft();
 
-        $("#center-list").append($("#center-list-2").children());
-        $("#center-list").find(".fade-top").remove();
-        $("#center-list").find(".fade-bottom").remove();
-        createTopBottomFade($("#center-list"), $("#container-1"), 10);
-        clearList($("#center-list-2"));
-        fillRightList(children);
+          $("#left-list").find(".fade-top").remove();
+          $("#left-list").find(".fade-bottom").remove();
+          createTopBottomFade($("#left-list"), $("#container-1"), 10);
 
-        setClicksLeft();
-        setClicksRight();
+          clearList($("#right-list"));
+          fillRightList(children);
+
+          setClicksLeft();
+          setClicksRight();
+        });
     });
 }
 function fillContent(data1, data2){
