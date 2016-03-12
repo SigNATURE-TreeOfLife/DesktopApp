@@ -1,4 +1,3 @@
-const $ = require('jQuery');
 
 // Adds each individual item on the list
 // Includes:
@@ -9,14 +8,15 @@ function addItemToList(dp, $center_list, listSize){
     // Creates a variable for the row
     var $cli_table_row = $("<tr>", {class:"center-list-item"});
     if (listSize < 3) {
-        $cli_table_row.height($center_list.height()/3);
+        $cli_table_row.height($("#container-1").height()/3);
     }
     else if(listSize < 7){
-        $cli_table_row.height($center_list.height()/listSize);
+        $cli_table_row.height($("#container-1").height()/listSize);
     }
     else {
-        $cli_table_row.height($center_list.height()/7);
+        $cli_table_row.height($("#container-1").height()/7);
     }
+
 
     // Creating the image div with its height and width
     var $cli_image = $("<div>", {class: "circle center-list-image"});
@@ -34,8 +34,11 @@ function addItemToList(dp, $center_list, listSize){
     var $cli_name = $("<li>", {class : "item-name"});
     $cli_name.append(dp.name);
 
-    var $cli_id = $("<li>",{class:"hidden"});
+    var $cli_id = $("<li>",{class:"hidden tsn"});
     $cli_id.append(dp.id);
+
+    var $cli_rank_name = $("<li>", {class:"hidden rank-name"});
+    $cli_rank_name.append(dp.rank_name);
 
     var $cli_time = $("<li>", {class : "item-time"});
     $cli_time.append(dp.time);
@@ -52,6 +55,7 @@ function addItemToList(dp, $center_list, listSize){
 
     $cli_div_list.append($cli_name);
     $cli_div_list.append($cli_id);
+    $cli_div_list.append($cli_rank_name);
     $cli_div_list.append($cli_time);
     $cli_div_list.append($cli_more);
 
@@ -111,28 +115,11 @@ function fillRightList(data) {
         var dp = data[obj];
 
         addItemToList(dp, $center_list, data.length);
-        console.log(data.length);
     }
     createTopBottomFade($center_list, $("#container-2"), data.length);
     $center_list.width($(document).width()*.4);
 }
 
-// Data to fill in for the left list
-var data = [
-    {name: "Bacteria",  time: "", description: "", id: 50},
-    {name: "Protozoa",  time: "", description: "", id: 630577},
-    {name: "Plantae",   time: "", description: "", id: 202422},
-    {name: "Animalia",  time: "", description: "", id: 202423},
-    {name: "Fungi",     time: "", description: "", id: 555705},
-    {name: "Chromista", time: "", description: "", id: 630578},
-    {name: "Archaea",   time: "", description: "", id: 935939},
-];
-// Data to fill in for the right list
-var data2 = [];
-for(var i = 0; i < 9; i++){
-    var domain = new dataObj("Domain Name", "Time Period", "Description", i);
-    data2.push(domain);
-}
 
 //Function will empty the entire list
 // Will also put animations before clearing the list
@@ -143,25 +130,78 @@ function clearList($center_list){
 function killClicksLeft(){
   $("#left-list").find("tr").unbind("click");
 }
+function changeBCList(rank_name, name, tsn){
+  $lastElement = $("#bc-list").find(".bcli").last();
+  $lastElement.find(".bcl-name").text(name);
+  $lastElement.find(".bcl-rname").text(rank_name);
+  $lastElement.find(".tsn").text(tsn);
+  updateLeftBreadcrumb(rank_name, name);
+}
 
 function setClicksLeft(){
     $("#left-list").find("tr").click(function(){
         var ul = $(this).find("td:nth-child(2)");
+        var rname = ul.find(".rank-name").text();
+        var name = ul.find(".item-name").text();
+        var tsn = ul.find(".tsn").text();
+        changeBCList(rname, name, tsn);
 // Fill data function that uses getChildren to fill in the data on the left list or the right list
-        getChildren(parseInt(ul.find(".hidden").text()), function(children){
+        getChildren(parseInt(ul.find(".tsn").text()), function(children){
           clearList($("#right-list"));
           fillRightList(children);
           setClicksRight();
         });
     });
 }
+
+function fillFromBreadcrumbs(TSN){
+  //click a breadcrumb, get TSN
+  withParent(TSN, function(parent){
+    getChildren(parent, function(children){
+      // 'children' now refers to the siblings
+      clearList($("#left-list"));
+      fillLeftList(children);
+      setClicksLeft();
+    });
+  });
+  getChildren(TSN, function(children){
+    clearList($("#right-list"));
+    fillRightList(children);
+    setClicksRight();
+  })
+}
+
+function appendToBCList(rank_name, name, tsn){
+  var $bc_item = $("<li>", {class:"bcli"});
+  var $bc_list = $("<ul>", {class:"bcl"});
+  var $bc_name = $("<li>", {class:"bcl-item bcl-name"});
+  $bc_name.append(name);
+  var $bc_rank_name = $("<li>", {class:"bcl-item bcl-rname"});
+  $bc_rank_name.append(rank_name);
+  var $bc_tsn = $("<li>", {class:"hidden tsn"});
+  $bc_tsn.append(tsn);
+
+  $bc_list.append($bc_rank_name);
+  $bc_list.append($bc_name);
+  $bc_list.append($bc_tsn);
+
+  $bc_item.append($bc_list);
+
+  $("#bc-list").append($bc_item);
+  updateLeftBreadcrumb(rank_name, name);
+}
 // Function sets what will happen when you click a value on the given table id
 function setClicksRight(){
     $("#right-list").find("tr").click(function(){
         var ul = $(this).find("td:nth-child(2)");
+        var rname = ul.find(".rank-name").text();
+        var name = ul.find(".item-name").text();
+        var tsn = ul.find(".tsn").text();
+
 // Fill data function that uses getChildren to fill in the data on the left list or the right list
-        getChildren(parseInt(ul.find(".hidden").text()), function(children){
+        getChildren(parseInt(ul.find(".tsn").text()), function(children){
           if (children.length == 0) return;
+          appendToBCList(rname, name, tsn);
           clearList($("#left-list"));
           $("#left-list").append($("#right-list").children());
           killClicksLeft();
@@ -178,10 +218,18 @@ function setClicksRight(){
         });
     });
 }
-function fillContent(data1, data2){
-    fillLeftList(data);
-    fillRightList(data2);
-    setClicksLeft();
-    setClicksRight();
-}
-fillContent(data, data2);
+
+$(document).ready(function(){
+  // Data to fill in for the left list
+
+  fillLeftList(KingdomsData);
+  setClicksLeft();
+
+  $("#left-list").find("tr")[0].click();
+});
+$(document).click(function(){
+    $("#bc-list").find(".bcl").click(function(){
+        var tsnValue = parseInt($(this).find(".tsn").text());
+        fillFromBreadcrumbs(tsnValue);
+    });
+});

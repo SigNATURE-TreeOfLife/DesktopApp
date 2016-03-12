@@ -14,14 +14,14 @@
                     <img src="assets/img/logo.png">
             </li>
          <li class = "navbar-element" style="width: 60%">
-                <a href="#"  data-toggle="popover" data-trigger="focus hover" data-placement="bottom">
+                <a id="popover" href="#"  data-toggle="popover" data-trigger="focus hover" data-placement="bottom">
 
     <!--    THIS IS THE BREADCRUMB. REPLACE CATEGORY AND NAME!   -->
 
     <!-- PARENT CATEGORY AND NAME BREADCRUMB ELEMENT-->
                    <div class="breadcrumb-element">
-                     <div id="Kingdom-category" style="height:15px">category</div>
-                     <div id="Kingdom-name" style="height:20px">name</div>
+                     <div id="Left-category" style="height:15px">category</div>
+                     <div id="Left-name" style="height:20px">name</div>
                    </div>
 
                    <div class="breadcrumb-element">
@@ -31,8 +31,8 @@
     <!-- CHILD CATEGORY AND NAME BREADCRUMB ELEMENT-->
 
                    <div class="breadcrumb-element">
-                     <div id="Phylum-category" style="height:15px">category</div>
-                     <div id="Phylum-name" style="height:20px">name</div>
+                     <div id="Right-category" style="height:15px">category</div>
+                     <div id="Right-name" style="height:20px">name</div>
                    </div>
                 </a>
          </li>
@@ -67,6 +67,7 @@
     <div id = "container-2">
         <table id = "right-list"> </table>
     </div>
+    <ul id="bc-list" class="hidden"></ul>
   </body>
         <script src="node_modules/jquery/dist/jquery.js"></script>
         <script src="assets/compiled/js/script.js"></script>
