@@ -27,4 +27,8 @@ npm install && npm start
 
 Learn more about Electron and its API in the [documentation](http://electron.atom.io/docs/latest).
 
+**Database**
+We're using the SQLITE database from http://www.itis.gov/downloads/
+To use the backend, download it and put it in the root folder of the project.
+
 #### License [CC0 (Public Domain)](LICENSE.md)
