@@ -16,13 +16,13 @@ $(document).ready(function(){
 
 
 var KingdomsData = [
-    {name: "Bacteria",  time: "", description: "", id: 50},
-    {name: "Protozoa",  time: "", description: "", id: 630577},
-    {name: "Plantae",   time: "", description: "", id: 202422},
-    {name: "Animalia",  time: "", description: "", id: 202423},
-    {name: "Fungi",     time: "", description: "", id: 555705},
-    {name: "Chromista", time: "", description: "", id: 630578},
-    {name: "Archaea",   time: "", description: "", id: 935939},
+    {name: "Bacteria",  time: "", description: "", rank_name: "Kingdom", vernacular_name: "Bacteria",  id: 50},
+    {name: "Protozoa",  time: "", description: "", rank_name: "Kingdom", vernacular_name: "Protozoa",  id: 630577},
+    {name: "Plantae",   time: "", description: "", rank_name: "Kingdom", vernacular_name: "Plants",    id: 202422},
+    {name: "Animalia",  time: "", description: "", rank_name: "Kingdom", vernacular_name: "Animals",   id: 202423},
+    {name: "Fungi",     time: "", description: "", rank_name: "Kingdom", vernacular_name: "Fungi",     id: 555705},
+    {name: "Chromista", time: "", description: "", rank_name: "Kingdom", vernacular_name: "Chromista", id: 630578},
+    {name: "Archaea",   time: "", description: "", rank_name: "Kingdom", vernacular_name: "Archaea",   id: 935939},
 ];
 
 function updateLeftBreadcrumb(rank_name, name) {

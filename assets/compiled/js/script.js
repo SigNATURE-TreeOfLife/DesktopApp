@@ -8,12 +8,13 @@ var db = new sqlite3.Database(file);
 
 // Class to hold data of name time and description
 // Can add more variables later when needed
-function dataObj (_name, _time, _description, _id, _rank_name) {
+function dataObj (_name, _time, _description, _id, _rank_name, _vernacular_name) {
     this.name = _name;
     this.time = _time;
     this.description = _description;
     this.id = _id;
     this.rank_name = _rank_name;
+    this.vernacular_name = _vernacular_name;
 }
 
 function getChildren(id, callback) {
@@ -22,16 +23,19 @@ function getChildren(id, callback) {
 
 	db.serialize(function(){
 		var stmt = db.prepare(
-			"SELECT completename, longnames.tsn, rank_name \
+			"SELECT completename, longnames.tsn, rank_name, GROUP_CONCAT(vernacular_name, '/') AS `vernacular_name` \
 			FROM hierarchy \
 				JOIN longnames ON hierarchy.TSN = longnames.tsn \
 				JOIN taxonomic_units ON hierarchy.TSN = taxonomic_units.tsn \
 				JOIN taxon_unit_types ON \
 					taxonomic_units.rank_id = taxon_unit_types.rank_id AND \
 					taxonomic_units.kingdom_id = taxon_unit_types.kingdom_id \
-			WHERE hierarchy.Parent_tsn = (?)");
+        LEFT JOIN vernaculars ON hierarchy.TSN = vernaculars.tsn AND language = 'English' \
+			WHERE hierarchy.Parent_tsn = (?) \
+      GROUP BY longnames.tsn");
 		stmt.each([id], function(err, row) {
-			var child = new dataObj(row.completename, "", "", row.tsn, row.rank_name);
+      if (err) alert(err);
+			var child = new dataObj(row.completename, "", "", row.tsn, row.rank_name, row.vernacular_name);
 			children.push( child );
 		}, function() {
       		return callback(children);
@@ -67,13 +71,13 @@ $(document).ready(function(){
 
 
 var KingdomsData = [
-    {name: "Bacteria",  time: "", description: "", id: 50},
-    {name: "Protozoa",  time: "", description: "", id: 630577},
-    {name: "Plantae",   time: "", description: "", id: 202422},
-    {name: "Animalia",  time: "", description: "", id: 202423},
-    {name: "Fungi",     time: "", description: "", id: 555705},
-    {name: "Chromista", time: "", description: "", id: 630578},
-    {name: "Archaea",   time: "", description: "", id: 935939},
+    {name: "Bacteria",  time: "", description: "", rank_name: "Kingdom", vernacular_name: "Bacteria",  id: 50},
+    {name: "Protozoa",  time: "", description: "", rank_name: "Kingdom", vernacular_name: "Protozoa",  id: 630577},
+    {name: "Plantae",   time: "", description: "", rank_name: "Kingdom", vernacular_name: "Plants",    id: 202422},
+    {name: "Animalia",  time: "", description: "", rank_name: "Kingdom", vernacular_name: "Animals",   id: 202423},
+    {name: "Fungi",     time: "", description: "", rank_name: "Kingdom", vernacular_name: "Fungi",     id: 555705},
+    {name: "Chromista", time: "", description: "", rank_name: "Kingdom", vernacular_name: "Chromista", id: 630578},
+    {name: "Archaea",   time: "", description: "", rank_name: "Kingdom", vernacular_name: "Archaea",   id: 935939},
 ];
 
 function updateLeftBreadcrumb(rank_name, name) {
@@ -153,23 +157,23 @@ function addItemToList(dp, $center_list, listSize){
     var $cli_rank_name = $("<li>", {class:"hidden rank-name"});
     $cli_rank_name.append(dp.rank_name);
 
-    var $cli_time = $("<li>", {class : "item-time"});
-    $cli_time.append(dp.time);
+    var $cli_vernacular = $("<li>", {class : "item-vernacular"});
+    $cli_vernacular.append(dp.vernacular_name);
 
     var $cli_more = $("<li>", {class: "item-time"});
     $cli_more.append("More...");
 
     if(listSize < 8){
-        $cli_name.css("font-size", 20 + $cli_table_row.height() / 30);
-        $cli_time.css("font-size", 18 + $cli_table_row.height()/30);
-        $cli_more.css("font-size", 18 + $cli_table_row.height()/30);
+        $cli_name.css(      "font-size", 20 + $cli_table_row.height()/30);
+        $cli_vernacular.css("font-size", 18 + $cli_table_row.height()/20);
+        $cli_more.css(      "font-size", 18 + $cli_table_row.height()/15);
 
     }
 
     $cli_div_list.append($cli_name);
     $cli_div_list.append($cli_id);
     $cli_div_list.append($cli_rank_name);
-    $cli_div_list.append($cli_time);
+    $cli_div_list.append($cli_vernacular);
     $cli_div_list.append($cli_more);
 
     //Creating table data to append the list data to
@@ -240,6 +244,13 @@ function clearList($center_list){
     $center_list.empty();
 }
 
+function showInfoPanel(name) {
+  clearList($("#right-list"));
+  $("#right-list").append($(
+    '<webview id="infoview" src="http://google.com/#q='+name+'" style="display:block; width:100%; height:100%"></webview>'
+  ));
+}
+
 function killClicksLeft(){
   $("#left-list").find("tr").unbind("click");
 }
@@ -260,9 +271,13 @@ function setClicksLeft(){
         changeBCList(rname, name, tsn);
 // Fill data function that uses getChildren to fill in the data on the left list or the right list
         getChildren(parseInt(ul.find(".tsn").text()), function(children){
-          clearList($("#right-list"));
-          fillRightList(children);
-          setClicksRight();
+          if (children.length == 0) {
+            showInfoPanel(rname);
+          } else {
+            clearList($("#right-list"));
+            fillRightList(children);
+            setClicksRight();
+          }
         });
     });
 }
@@ -313,7 +328,6 @@ function setClicksRight(){
 
 // Fill data function that uses getChildren to fill in the data on the left list or the right list
         getChildren(parseInt(ul.find(".tsn").text()), function(children){
-          if (children.length == 0) return;
           appendToBCList(rname, name, tsn);
           clearList($("#left-list"));
           $("#left-list").append($("#right-list").children());
@@ -323,11 +337,15 @@ function setClicksRight(){
           $("#left-list").find(".fade-bottom").remove();
           createTopBottomFade($("#left-list"), $("#container-1"), 10);
 
-          clearList($("#right-list"));
-          fillRightList(children);
-
           setClicksLeft();
-          setClicksRight();
+
+          if (children.length == 0) {
+            showInfoPanel(name);
+          } else {
+            clearList($("#right-list"));
+            fillRightList(children);
+            setClicksRight();
+          }
         });
     });
 }

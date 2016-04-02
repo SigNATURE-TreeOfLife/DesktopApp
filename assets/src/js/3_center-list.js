@@ -40,23 +40,23 @@ function addItemToList(dp, $center_list, listSize){
     var $cli_rank_name = $("<li>", {class:"hidden rank-name"});
     $cli_rank_name.append(dp.rank_name);
 
-    var $cli_time = $("<li>", {class : "item-time"});
-    $cli_time.append(dp.time);
+    var $cli_vernacular = $("<li>", {class : "item-vernacular"});
+    $cli_vernacular.append(dp.vernacular_name);
 
     var $cli_more = $("<li>", {class: "item-time"});
     $cli_more.append("More...");
 
     if(listSize < 8){
-        $cli_name.css("font-size", 20 + $cli_table_row.height() / 30);
-        $cli_time.css("font-size", 18 + $cli_table_row.height()/30);
-        $cli_more.css("font-size", 18 + $cli_table_row.height()/30);
+        $cli_name.css(      "font-size", 20 + $cli_table_row.height()/30);
+        $cli_vernacular.css("font-size", 18 + $cli_table_row.height()/20);
+        $cli_more.css(      "font-size", 18 + $cli_table_row.height()/15);
 
     }
 
     $cli_div_list.append($cli_name);
     $cli_div_list.append($cli_id);
     $cli_div_list.append($cli_rank_name);
-    $cli_div_list.append($cli_time);
+    $cli_div_list.append($cli_vernacular);
     $cli_div_list.append($cli_more);
 
     //Creating table data to append the list data to
@@ -127,6 +127,13 @@ function clearList($center_list){
     $center_list.empty();
 }
 
+function showInfoPanel(name) {
+  clearList($("#right-list"));
+  $("#right-list").append($(
+    '<webview id="infoview" src="http://google.com/#q='+name+'" style="display:block; width:100%; height:100%"></webview>'
+  ));
+}
+
 function killClicksLeft(){
   $("#left-list").find("tr").unbind("click");
 }
@@ -147,9 +154,13 @@ function setClicksLeft(){
         changeBCList(rname, name, tsn);
 // Fill data function that uses getChildren to fill in the data on the left list or the right list
         getChildren(parseInt(ul.find(".tsn").text()), function(children){
-          clearList($("#right-list"));
-          fillRightList(children);
-          setClicksRight();
+          if (children.length == 0) {
+            showInfoPanel(rname);
+          } else {
+            clearList($("#right-list"));
+            fillRightList(children);
+            setClicksRight();
+          }
         });
     });
 }
@@ -200,7 +211,6 @@ function setClicksRight(){
 
 // Fill data function that uses getChildren to fill in the data on the left list or the right list
         getChildren(parseInt(ul.find(".tsn").text()), function(children){
-          if (children.length == 0) return;
           appendToBCList(rname, name, tsn);
           clearList($("#left-list"));
           $("#left-list").append($("#right-list").children());
@@ -210,11 +220,15 @@ function setClicksRight(){
           $("#left-list").find(".fade-bottom").remove();
           createTopBottomFade($("#left-list"), $("#container-1"), 10);
 
-          clearList($("#right-list"));
-          fillRightList(children);
-
           setClicksLeft();
-          setClicksRight();
+
+          if (children.length == 0) {
+            showInfoPanel(name);
+          } else {
+            clearList($("#right-list"));
+            fillRightList(children);
+            setClicksRight();
+          }
         });
     });
 }
